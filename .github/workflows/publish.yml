@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
 
 jobs:
   build-and-publish:
@@ -29,9 +30,15 @@ jobs:
         run: |
           uv build
 
+      - name: Validate PyPI token
+        run: |
+          if [ -z "${{ secrets.PYPI_API_TOKEN }}" ]; then
+            echo "PYPI_API_TOKEN is not set in repo secrets. Create a PyPI API token and add it at Settings > Secrets and variables > Actions." >&2
+            exit 1
+          fi
+
       - name: Publish to PyPI
         env:
           UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           uv publish --token "$UV_PUBLISH_TOKEN"
-
