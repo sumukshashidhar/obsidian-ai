@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
     steps:
       - name: Check out
         uses: actions/checkout@v4
@@ -22,23 +23,15 @@ jobs:
           python-version: "3.12"
 
       - name: Install uv
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+        uses: astral-sh/setup-uv@v3
 
       - name: Build package
         run: |
           uv build
 
-      - name: Validate PyPI token
-        run: |
-          if [ -z "${{ secrets.PYPI_API_TOKEN }}" ]; then
-            echo "PYPI_API_TOKEN is not set in repo secrets. Create a PyPI API token and add it at Settings > Secrets and variables > Actions." >&2
-            exit 1
-          fi
-
-      - name: Publish to PyPI
-        env:
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          uv publish --token "$UV_PUBLISH_TOKEN"
+      - name: Publish to PyPI (trusted publishing)
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist
+          skip-existing: true
+          print-hash: true
