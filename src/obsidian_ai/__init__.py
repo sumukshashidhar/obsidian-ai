@@ -5,7 +5,7 @@ try:
     __version__ = _dist_version("obsidian-ai")
 except Exception:
     # Fallback for local, editable, or non-installed runs
-    __version__ = "0.1.0"
+    __version__ = "0.1.1"
 
 def main() -> None:
     """Entry point for the obsidian-ai CLI.
