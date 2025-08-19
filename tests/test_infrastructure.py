@@ -151,10 +151,10 @@ class TestFileSystem:
         test_file = temp_brain / "valid.md"
         test_file.write_text("content")
 
-        # Test the actual implementation with real paths  
+        # Test the actual implementation with real paths
         from obsidian_ai.infrastructure.config import Config
         old_config = Config.load()
-        
+
         # Temporarily override the config
         test_config = Config(
             brain_dir=temp_brain,
@@ -163,7 +163,7 @@ class TestFileSystem:
             cache_dir=temp_brain / ".cache",
             ignore_patterns=old_config.ignore_patterns
         )
-        
+
         with patch("obsidian_ai.infrastructure.file_system.config", test_config):
             # Relative path
             resolved = _resolve_path("valid.md")

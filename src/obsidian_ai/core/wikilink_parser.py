@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import re
-from typing import NamedTuple, Callable
+from typing import NamedTuple
+from collections.abc import Callable
 
 
 class WikiLink(NamedTuple):

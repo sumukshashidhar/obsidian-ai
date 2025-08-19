@@ -28,7 +28,7 @@ Met Steve at a conference about AI research.
         """
 # Daily Note - August 18, 2025
 
-- Today is an interesting day, as it's the day that [[Tara]] comes to the US. 
+- Today is an interesting day, as it's the day that [[Tara]] comes to the US.
 - Mixed feelings, if stuff goes well, might be one of the first primary interactions.
 - Also meeting with [[Steve Baker]] about the AI project.
 """.strip()
@@ -64,7 +64,7 @@ class TestExactPhraseSearch:
     def test_exact_phrase_found_integration(self, mock_brain):
         """Integration test using actual files."""
         from obsidian_ai.infrastructure.config import Config
-        
+
         test_config = Config(
             brain_dir=mock_brain,
             model="gpt-4o",
@@ -72,7 +72,7 @@ class TestExactPhraseSearch:
             cache_dir=mock_brain / ".cache",
             ignore_patterns=[".git", "__pycache__"]
         )
-        
+
         with patch("obsidian_ai.core.search_engine.config", test_config):
             search = ExactPhraseSearch()
             # Use a simpler search term that definitely exists

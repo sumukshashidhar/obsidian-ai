@@ -36,7 +36,7 @@ class TestWikilinkParser:
     def test_extract_wikilinks_multiline(self):
         text = """
     First paragraph mentions [[Person A]].
-    
+
     Second paragraph discusses [[Topic B]] and [[Topic C]].
     """
 
