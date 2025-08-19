@@ -4,7 +4,7 @@ from typing import Any
 
 from loguru import logger
 from openai import OpenAI
-from openai.types.chat import ChatCompletion, ChatCompletionMessageParam
+from openai.types.chat import ChatCompletion
 
 from ..infrastructure.config import config
 
