@@ -47,7 +47,7 @@ class LocalVectorizer:
                 df[i] += 1.0
         N = float(max(1, len(chunks_indices)))
         idf = np.log((N + 1.0) / (df + 1.0)) + 1.0
-        return idf.astype(np.float32)
+        return idf.astype(np.float32)  # type: ignore[no-any-return]
 
     def tfidf_norm(self, idxs: list[int], idf: np.ndarray) -> np.ndarray:
         v = self.tf(idxs)

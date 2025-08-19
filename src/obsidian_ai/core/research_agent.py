@@ -8,7 +8,7 @@ from loguru import logger
 from ..core.search_engine import search_engine
 from ..core.wikilink_parser import WikiLinkParser
 from ..infrastructure.file_system import read_file_safe
-from ..services.openai_client import openai_client, OpenAIError
+from ..services.openai_client import get_openai_client, OpenAIError
 from ..services.embedding_service import embedding_service
 from ..prompts.research import ResearchPrompts
 
@@ -30,7 +30,7 @@ class ResearchStep:
 class ResearchAgent:
     """Autonomous research agent that follows wikilinks and builds understanding iteratively."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.prompts = ResearchPrompts()
 
     def conduct_research(self, topic: str, max_iterations: int = 4) -> dict[str, Any]:
@@ -156,7 +156,7 @@ class ResearchAgent:
                 original_topic=topic, current_focus=current_focus, previous_context=previous_context, discovered_context=discovered_context
             )
 
-            response = openai_client.simple_completion(prompt, max_tokens=400)
+            response = get_openai_client().simple_completion(prompt, max_tokens=400)
             return self._parse_reasoning_response(response)
 
         except OpenAIError as e:
@@ -197,7 +197,7 @@ class ResearchAgent:
             # Extract wikilinks from all found content
             for result in search_results:
                 content = result.get("text", result.get("preview", ""))
-                links = WikiLinkParser.extract_unique_targets(content)
+                links = WikiLinkParser.extract_unique_targets(str(content))
                 wikilinks_found.extend(links)
 
         except Exception as e:
@@ -247,7 +247,7 @@ class ResearchAgent:
         try:
             prompt = self.prompts.get_content_analysis_prompt(topic=topic, file_path=file_path, content=content)
 
-            return openai_client.simple_completion(prompt, max_tokens=200)
+            return get_openai_client().simple_completion(prompt, max_tokens=200)
 
         except OpenAIError as e:
             logger.error(f"Content analysis failed for {file_path}: {e}")
@@ -279,7 +279,7 @@ class ResearchAgent:
                 previous_context=previous_context,
             )
 
-            return openai_client.simple_completion(prompt, max_tokens=400)
+            return get_openai_client().simple_completion(prompt, max_tokens=400)
 
         except OpenAIError as e:
             logger.error(f"Synthesis failed: {e}")
@@ -307,7 +307,7 @@ Consider:
 
 Return 2-3 specific research directions, each as a short phrase or entity name."""
 
-            response = openai_client.simple_completion(prompt, max_tokens=200)
+            response = get_openai_client().simple_completion(prompt, max_tokens=200)
             next_actions = [action.strip("- ").strip() for action in response.strip().split("\n") if action.strip()]
             return next_actions[:3]
 
@@ -331,7 +331,7 @@ Focus on a different angle or aspect that hasn't been covered yet.
 
 Return only the search query:"""
 
-            return openai_client.simple_completion(prompt, max_tokens=50).strip()
+            return get_openai_client().simple_completion(prompt, max_tokens=50).strip()
 
         except OpenAIError:
             return f"information about {topic}"
@@ -365,7 +365,7 @@ Return only the search query:"""
                 unique_wikilinks=", ".join(unique_wikilinks[:20]),
             )
 
-            return openai_client.simple_completion(prompt, max_tokens=1000)
+            return get_openai_client().simple_completion(prompt, max_tokens=1000)
 
         except OpenAIError as e:
             logger.error(f"Final report generation failed: {e}")

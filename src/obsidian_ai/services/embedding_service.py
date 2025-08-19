@@ -16,7 +16,7 @@ class EmbeddingService:
         """Perform semantic search and return structured results."""
         try:
             result_json = _semantic_search(query, k)
-            return json.loads(result_json)
+            return json.loads(result_json)  # type: ignore[no-any-return]
         except Exception as e:
             return {"query": query, "results": [], "error": str(e)}
 

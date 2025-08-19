@@ -7,7 +7,7 @@ from loguru import logger
 from rich.console import Console
 from rich.panel import Panel
 
-from ..services.openai_client import openai_client, OpenAIError
+from ..services.openai_client import get_openai_client, OpenAIError
 from ..prompts.chat import ChatPrompts
 from .tools import TOOLS, dispatch_tool
 
@@ -15,7 +15,7 @@ from .tools import TOOLS, dispatch_tool
 class ChatSession:
     """Manages chat sessions with tool integration and error handling."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.console = Console()
         self.prompts = ChatPrompts()
 
@@ -32,7 +32,7 @@ class ChatSession:
         messages = [{"role": "system", "content": self.prompts.system_prompt}, {"role": "user", "content": query}]
 
         try:
-            response = openai_client.chat_completion(messages, tools=TOOLS)
+            response = get_openai_client().chat_completion(messages, tools=TOOLS)
             message = response.choices[0].message
 
             # Handle tool calls
@@ -69,7 +69,7 @@ class ChatSession:
 
         # Get final response
         try:
-            final_response = openai_client.continue_conversation(messages)
+            final_response = get_openai_client().continue_conversation(messages)
             return final_response or "No final response generated."
         except OpenAIError as e:
             logger.error(f"Error getting final response: {e}")

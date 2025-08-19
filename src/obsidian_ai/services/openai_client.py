@@ -4,7 +4,7 @@ from typing import Any
 
 from loguru import logger
 from openai import OpenAI
-from openai.types.chat import ChatCompletion
+from openai.types.chat import ChatCompletion, ChatCompletionMessageParam
 
 from ..infrastructure.config import config
 
@@ -27,7 +27,7 @@ class OpenAIClient:
         """Create a chat completion with error handling."""
         try:
             return self.client.chat.completions.create(
-                model=config.model, messages=messages, tools=tools, max_completion_tokens=max_tokens, temperature=temperature
+                model=config.model, messages=messages, tools=tools, max_completion_tokens=max_tokens, temperature=temperature  # type: ignore[arg-type]
             )
         except Exception as e:
             logger.error(f"OpenAI API error: {e}")

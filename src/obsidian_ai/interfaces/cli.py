@@ -15,7 +15,7 @@ from ..infrastructure.file_system import read_file_safe
 console = Console()
 
 
-def setup_logging(verbose: int):
+def setup_logging(verbose: int) -> None:
     logger.remove()
     if verbose >= 1:
         logger.add(sys.stderr, level="DEBUG")
@@ -26,7 +26,7 @@ def setup_logging(verbose: int):
 @click.group()
 @click.option("-v", "--verbose", count=True, help="Increase verbosity")
 @click.option("--ignore", multiple=True, help="Additional ignore patterns (can be used multiple times)")
-def cli(verbose: int, ignore: tuple[str, ...]):
+def cli(verbose: int, ignore: tuple[str, ...]) -> None:
     """Obsidian-AI: Chat with your notes."""
     setup_logging(verbose)
 
@@ -47,7 +47,7 @@ def cli(verbose: int, ignore: tuple[str, ...]):
 
 @cli.command()
 @click.argument("query")
-def chat(query: str):
+def chat(query: str) -> None:
     """Ask a question about your notes."""
     if not os.getenv("OPENAI_API_KEY"):
         console.print("[red]Error: OPENAI_API_KEY not set[/red]")
@@ -59,7 +59,7 @@ def chat(query: str):
 
 
 @cli.command()
-def repl():
+def repl() -> None:
     """Start interactive chat."""
     if not os.getenv("OPENAI_API_KEY"):
         console.print("[red]Error: OPENAI_API_KEY not set[/red]")
@@ -72,7 +72,7 @@ def repl():
 @cli.command()
 @click.argument("query")
 @click.option("--max-results", default=10, help="Maximum results")
-def search(query: str, max_results: int):
+def search(query: str, max_results: int) -> None:
     """Search notes for keywords."""
     results = search_engine.search(query, max_results)
     for result in results:
@@ -83,7 +83,7 @@ def search(query: str, max_results: int):
 @click.argument("path")
 @click.option("--start", default=0, help="Start byte")
 @click.option("--max-bytes", default=4096, help="Max bytes to read")
-def read(path: str, start: int, max_bytes: int):
+def read(path: str, start: int, max_bytes: int) -> None:
     """Read a file from your notes."""
     try:
         content = read_file_safe(path, start, max_bytes)
@@ -92,5 +92,5 @@ def read(path: str, start: int, max_bytes: int):
         console.print(f"[red]Error: {e}[/red]")
 
 
-def main():
+def main() -> None:
     cli()
