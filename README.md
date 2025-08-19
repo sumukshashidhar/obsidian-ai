@@ -27,8 +27,9 @@ uv pip install -e .
 
 ```bash
 export OPENAI_API_KEY="your-api-key-here"
-export OBSIDIAN_AI_BRAIN_DIR="$HOME/brain"  # Optional: defaults to ~/brain
-export OBSIDIAN_AI_MODEL="gpt-4o"          # Optional: defaults to gpt-4o
+export OBSIDIAN_AI_BRAIN_DIR="$HOME/brain"              # Optional: defaults to ~/brain
+export OBSIDIAN_AI_MODEL="gpt-4o"                       # Optional: defaults to gpt-4o
+export OBSIDIAN_AI_IGNORE_PATTERNS="*.tmp,cache/*,30. Areas/Roleplay"  # Optional: comma-separated ignore patterns
 ```
 
 ### Usage
@@ -45,6 +46,9 @@ obsidian-ai search "project ideas"
 
 # Read specific file
 obsidian-ai read "projects/ai-assistant.md"
+
+# Ignore specific patterns for this session
+obsidian-ai --ignore "temp/*" --ignore "*.draft" chat "What are my project ideas?"
 ```
 
 ## How It Works
@@ -94,9 +98,34 @@ src/obsidian_ai/
 | `OBSIDIAN_AI_BRAIN_DIR` | `~/brain` | Directory containing your notes |
 | `OBSIDIAN_AI_MODEL` | `gpt-4o` | OpenAI model to use |
 | `OBSIDIAN_AI_MAX_TOOL_CALLS` | `5` | Maximum tool calls per query |
+| `OBSIDIAN_AI_IGNORE_PATTERNS` | Built-in defaults | Comma-separated patterns to ignore |
 | `OPENAI_API_KEY` | *required* | Your OpenAI API key |
 
 ## Advanced Usage
+
+### Ignore Patterns
+
+Control which directories and files are excluded from search:
+
+```bash
+# Environment variable (persistent)
+export OBSIDIAN_AI_IGNORE_PATTERNS="30. Areas/Roleplay,temp/*,*.draft,private/*"
+
+# Command-line flags (session-only)
+obsidian-ai --ignore "temp/*" --ignore "*.draft" search "project ideas"
+obsidian-ai --ignore "30. Areas/Roleplay" chat "Tell me about my notes"
+```
+
+**Built-in ignore patterns:**
+- `.git`, `.obsidian`, `.obsidian_ai_cache`
+- `node_modules`, `__pycache__`
+- `.DS_Store`, `Thumbs.db`
+
+**Pattern matching:**
+- `*` matches any characters: `temp/*` ignores anything in temp directories
+- `*.ext` matches files with specific extensions
+- `dirname` matches exact directory names anywhere in the path
+- `path/to/dir` matches specific paths relative to brain directory
 
 ### Semantic Search Caching
 
