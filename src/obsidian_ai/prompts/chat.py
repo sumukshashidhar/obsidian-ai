@@ -49,17 +49,17 @@ You are Obsidian-AI, an advanced research assistant specialized in exploring and
 
 
 class ChatPrompts:
-  """Chat-related prompt templates."""
+    """Chat-related prompt templates."""
 
-  def __init__(self):
-    # Load system prompt (can be overridden by env var)
-    prompt_manager.load_from_env("chat_system", DEFAULT_CHAT_PROMPT, [])
+    def __init__(self):
+        # Load system prompt (can be overridden by env var)
+        prompt_manager.load_from_env("chat_system", DEFAULT_CHAT_PROMPT, [])
 
-  @property
-  def system_prompt(self) -> str:
-    """Get the chat system prompt."""
-    return prompt_manager.render("chat_system")
+    @property
+    def system_prompt(self) -> str:
+        """Get the chat system prompt."""
+        return prompt_manager.render("chat_system")
 
-  def update_system_prompt(self, new_prompt: str) -> None:
-    """Update the system prompt."""
-    prompt_manager.load_template("chat_system", new_prompt, [])
+    def update_system_prompt(self, new_prompt: str) -> None:
+        """Update the system prompt."""
+        prompt_manager.load_template("chat_system", new_prompt, [])

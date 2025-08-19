@@ -6,48 +6,48 @@ import tempfile
 
 @pytest.fixture
 def temp_brain():
-  """Create temporary brain directory with synthetic test data."""
-  with tempfile.TemporaryDirectory() as tmpdir:
-    brain_dir = Path(tmpdir) / "brain"
-    brain_dir.mkdir()
+    """Create temporary brain directory with synthetic test data."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        brain_dir = Path(tmpdir) / "brain"
+        brain_dir.mkdir()
 
-    # Create comprehensive test data structure
-    create_synthetic_notes(brain_dir)
-    yield brain_dir
+        # Create comprehensive test data structure
+        create_synthetic_notes(brain_dir)
+        yield brain_dir
 
 
 @pytest.fixture
 def mock_config(temp_brain):
-  """Mock config to use temporary brain directory."""
-  with patch("obsidian_ai.infrastructure.config.config") as mock_cfg:
-    mock_cfg.brain_dir = temp_brain
-    mock_cfg.ignore_patterns = [".git", "__pycache__", ".obsidian"]
-    mock_cfg.max_file_size = 2 * 1024 * 1024  # 2MB
-    mock_cfg.model = "gpt-4o"
-    mock_cfg.max_tool_calls = 5
-    yield mock_cfg
+    """Mock config to use temporary brain directory."""
+    with patch("obsidian_ai.infrastructure.config.config") as mock_cfg:
+        mock_cfg.brain_dir = temp_brain
+        mock_cfg.ignore_patterns = [".git", "__pycache__", ".obsidian"]
+        mock_cfg.max_file_size = 2 * 1024 * 1024  # 2MB
+        mock_cfg.model = "gpt-4o"
+        mock_cfg.max_tool_calls = 5
+        yield mock_cfg
 
 
 @pytest.fixture
 def mock_openai_client():
-  """Mock OpenAI client for testing."""
-  with patch("obsidian_ai.services.openai_client.OpenAI") as mock_openai:
-    mock_client = mock_openai.return_value
-    mock_client.chat.completions.create.return_value.choices = [
-      type("Choice", (), {"message": type("Message", (), {"content": "Test response", "tool_calls": None})()})()
-    ]
-    yield mock_client
+    """Mock OpenAI client for testing."""
+    with patch("obsidian_ai.services.openai_client.OpenAI") as mock_openai:
+        mock_client = mock_openai.return_value
+        mock_client.chat.completions.create.return_value.choices = [
+            type("Choice", (), {"message": type("Message", (), {"content": "Test response", "tool_calls": None})()})()
+        ]
+        yield mock_client
 
 
 def create_synthetic_notes(brain_dir: Path) -> None:
-  """Create comprehensive synthetic test data."""
+    """Create comprehensive synthetic test data."""
 
-  # Daily notes
-  daily_dir = brain_dir / "daily"
-  daily_dir.mkdir()
+    # Daily notes
+    daily_dir = brain_dir / "daily"
+    daily_dir.mkdir()
 
-  (daily_dir / "2024-01-15.md").write_text(
-    """
+    (daily_dir / "2024-01-15.md").write_text(
+        """
 # January 15, 2024
 
 ## Tasks
@@ -59,10 +59,10 @@ def create_synthetic_notes(brain_dir: Path) -> None:
 Met with [[John Smith]] today about the AI research proposal.
 The [[Machine Learning Project]] is progressing well.
 """.strip()
-  )
+    )
 
-  (daily_dir / "2024-01-16.md").write_text(
-    """
+    (daily_dir / "2024-01-16.md").write_text(
+        """
 # January 16, 2024
 
 ## Reflection
@@ -74,14 +74,14 @@ Need to focus more on the [[Deep Learning]] aspects.
 - Use attention mechanisms
 - Consider BERT model variations
 """.strip()
-  )
+    )
 
-  # People directory
-  people_dir = brain_dir / "people"
-  people_dir.mkdir()
+    # People directory
+    people_dir = brain_dir / "people"
+    people_dir.mkdir()
 
-  (people_dir / "john-smith.md").write_text(
-    """
+    (people_dir / "john-smith.md").write_text(
+        """
 # John Smith
 
 ## Background
@@ -99,10 +99,10 @@ Senior researcher at AI Lab, specializing in [[Deep Learning]].
 ## Contact
 Email: john.smith@ailab.com
 """.strip()
-  )
+    )
 
-  (people_dir / "sarah-wilson.md").write_text(
-    """
+    (people_dir / "sarah-wilson.md").write_text(
+        """
 # Sarah Wilson
 
 ## Role
@@ -117,14 +117,14 @@ Data scientist with focus on [[Statistical Analysis]].
 - [[Data Pipeline]] - Lead developer
 - [[Analytics Dashboard]] - UI designer
 """.strip()
-  )
+    )
 
-  # Projects directory
-  projects_dir = brain_dir / "projects"
-  projects_dir.mkdir()
+    # Projects directory
+    projects_dir = brain_dir / "projects"
+    projects_dir.mkdir()
 
-  (projects_dir / "machine-learning.md").write_text(
-    """
+    (projects_dir / "machine-learning.md").write_text(
+        """
 # Machine Learning Project
 
 ## Overview
@@ -156,10 +156,10 @@ Large-scale ML project for predictive analytics.
 - [[Neural Networks]]
 - [[Research Paper]]
 """.strip()
-  )
+    )
 
-  (projects_dir / "data-pipeline.md").write_text(
-    """
+    (projects_dir / "data-pipeline.md").write_text(
+        """
 # Data Pipeline
 
 ## Description
@@ -178,14 +178,14 @@ Kafka for streaming, PostgreSQL for storage.
 ## Maintainer
 [[Sarah Wilson]] is the primary maintainer.
 """.strip()
-  )
+    )
 
-  # Concepts directory
-  concepts_dir = brain_dir / "concepts"
-  concepts_dir.mkdir()
+    # Concepts directory
+    concepts_dir = brain_dir / "concepts"
+    concepts_dir.mkdir()
 
-  (concepts_dir / "deep-learning.md").write_text(
-    """
+    (concepts_dir / "deep-learning.md").write_text(
+        """
 # Deep Learning
 
 ## Definition
@@ -212,10 +212,10 @@ Subset of machine learning using neural networks with multiple layers.
 - [[Machine Learning]]
 - [[Artificial Intelligence]]
 """.strip()
-  )
+    )
 
-  (concepts_dir / "neural-networks.md").write_text(
-    """
+    (concepts_dir / "neural-networks.md").write_text(
+        """
 # Neural Networks
 
 ## Fundamentals
@@ -234,14 +234,14 @@ Uses gradient-based optimization methods.
 ## Applications in [[Machine Learning Project]]
 Primary technology for predictive modeling.
 """.strip()
-  )
+    )
 
-  # Research directory
-  research_dir = brain_dir / "research"
-  research_dir.mkdir()
+    # Research directory
+    research_dir = brain_dir / "research"
+    research_dir.mkdir()
 
-  (research_dir / "paper-ideas.md").write_text(
-    """
+    (research_dir / "paper-ideas.md").write_text(
+        """
 # Research Paper Ideas
 
 ## Current Focus
@@ -264,14 +264,14 @@ Advancing transformer architectures for [[Deep Learning]].
 - Writing: May 2024
 - Submission: June 2024
 """.strip()
-  )
+    )
 
-  # Technical directory
-  tech_dir = brain_dir / "technical"
-  tech_dir.mkdir()
+    # Technical directory
+    tech_dir = brain_dir / "technical"
+    tech_dir.mkdir()
 
-  (tech_dir / "python-snippets.py").write_text(
-    """
+    (tech_dir / "python-snippets.py").write_text(
+        """
 # Python Code Snippets
 
 import numpy as np
@@ -292,10 +292,10 @@ def train_model(X, y):
 
 # Usage in [[Data Pipeline]]
 """.strip()
-  )
+    )
 
-  (tech_dir / "docker-setup.md").write_text(
-    """
+    (tech_dir / "docker-setup.md").write_text(
+        """
 # Docker Configuration
 
 ## For [[Machine Learning Project]]
@@ -327,14 +327,14 @@ services:
       POSTGRES_DB: mldata
 ```
 """.strip()
-  )
+    )
 
-  # Create some files in subdirectories for testing
-  sub_projects = projects_dir / "archived"
-  sub_projects.mkdir()
+    # Create some files in subdirectories for testing
+    sub_projects = projects_dir / "archived"
+    sub_projects.mkdir()
 
-  (sub_projects / "old-experiment.md").write_text(
-    """
+    (sub_projects / "old-experiment.md").write_text(
+        """
 # Old Experiment
 
 This was an early attempt at [[Deep Learning]] before the current [[Machine Learning Project]].
@@ -347,17 +347,17 @@ Inconclusive due to limited data.
 - Importance of feature engineering
 - Value of cross-validation
 """.strip()
-  )
+    )
 
-  # Create files with different extensions
-  (brain_dir / "notes.txt").write_text("Plain text notes about general topics.")
-  (brain_dir / "config.json").write_text('{"project": "obsidian-ai", "version": "1.0"}')
-  (brain_dir / "data.csv").write_text("name,role,project\nJohn,researcher,ML\nSarah,analyst,Pipeline")
+    # Create files with different extensions
+    (brain_dir / "notes.txt").write_text("Plain text notes about general topics.")
+    (brain_dir / "config.json").write_text('{"project": "obsidian-ai", "version": "1.0"}')
+    (brain_dir / "data.csv").write_text("name,role,project\nJohn,researcher,ML\nSarah,analyst,Pipeline")
 
-  # Create some larger files for testing file size limits
-  large_content = "This is a large file.\n" * 1000
-  (brain_dir / "large-file.md").write_text(large_content)
+    # Create some larger files for testing file size limits
+    large_content = "This is a large file.\n" * 1000
+    (brain_dir / "large-file.md").write_text(large_content)
 
-  # Create files with special characters and spaces
-  (brain_dir / "file with spaces.md").write_text("Testing file names with spaces.")
-  (brain_dir / "special-chars-@#$.md").write_text("Testing special characters in filenames.")
+    # Create files with special characters and spaces
+    (brain_dir / "file with spaces.md").write_text("Testing file names with spaces.")
+    (brain_dir / "special-chars-@#$.md").write_text("Testing special characters in filenames.")
