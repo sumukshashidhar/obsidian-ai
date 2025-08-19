@@ -142,8 +142,8 @@ class FilenameSearch:
 class UnifiedSearchEngine:
     """Unified search engine that combines multiple search strategies."""
 
-    def __init__(self):
-        self.strategies = [ExactPhraseSearch(), KeywordSearch(), FilenameSearch()]
+    def __init__(self) -> None:
+        self.strategies: list[SearchStrategy] = [ExactPhraseSearch(), KeywordSearch(), FilenameSearch()]
 
     def search(self, query: str, max_results: int = 10) -> list[SearchResult]:
         """Execute multi-strategy search and combine results."""

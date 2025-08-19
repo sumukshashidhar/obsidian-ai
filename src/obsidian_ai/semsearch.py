@@ -15,7 +15,7 @@ MAX_FILE_BYTES = 1_000_000  # 1MB file size limit
 from .local_embed import LocalVectorizer
 
 
-def _ensure_cache_dir():
+def _ensure_cache_dir() -> None:
     config.cache_dir.mkdir(parents=True, exist_ok=True)
 
 
@@ -82,7 +82,7 @@ def build_or_load_index() -> tuple[np.ndarray, np.ndarray, list[ChunkRec]]:
 
     vec = LocalVectorizer(dim=512, ngram_min=3, ngram_max=5)
     chunk_indices: list[list[int]] = []
-    recs: list[ChunkRec] = []
+    all_recs: list[ChunkRec] = []
     for p in iter_text_files(config.brain_dir, config.ignore_patterns):
         try:
             if p.stat().st_size > MAX_FILE_BYTES:
@@ -93,26 +93,26 @@ def build_or_load_index() -> tuple[np.ndarray, np.ndarray, list[ChunkRec]]:
         for start, chunk in _chunk_text(t, max_len=1200):
             idxs = vec.indices(chunk)
             chunk_indices.append(idxs)
-            recs.append(ChunkRec(path=str(p), start=start, preview=chunk[:240]))
+            all_recs.append(ChunkRec(path=str(p), start=start, preview=chunk[:240]))
 
     if not chunk_indices:
         matrix = np.zeros((0, vec.dim), dtype=np.float32)
         idf = np.ones(vec.dim, dtype=np.float32)
         meta_json.write_text(json.dumps({"signature": sig, "built_at": time.time()}))
         np.savez_compressed(index_npz, matrix=matrix, idf=idf, paths=[], starts=[], previews=[])
-        return matrix, idf, recs
+        return matrix, idf, all_recs
 
     idf = vec.fit_idf(chunk_indices)
     mtx = np.zeros((len(chunk_indices), vec.dim), dtype=np.float32)
     for i, idxs in enumerate(chunk_indices):
         mtx[i, :] = vec.tfidf_norm(idxs, idf)
 
-    paths = np.array([r.path for r in recs], dtype=object)
-    starts = np.array([r.start for r in recs], dtype=object)
-    previews = np.array([r.preview for r in recs], dtype=object)
+    paths = np.array([r.path for r in all_recs], dtype=object)
+    starts = np.array([r.start for r in all_recs], dtype=object)
+    previews = np.array([r.preview for r in all_recs], dtype=object)
     np.savez_compressed(index_npz, matrix=mtx, idf=idf, paths=paths, starts=starts, previews=previews)
     meta_json.write_text(json.dumps({"signature": sig, "built_at": time.time()}))
-    return mtx, idf, recs
+    return mtx, idf, all_recs
 
 
 def semantic_search(query: str, k: int = 10) -> str:

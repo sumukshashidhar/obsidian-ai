@@ -9,7 +9,7 @@ from ..semsearch import semantic_search as _semantic_search
 class EmbeddingService:
     """Service for semantic search using local embeddings."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     def semantic_search(self, query: str, k: int = 10) -> dict[str, Any]:

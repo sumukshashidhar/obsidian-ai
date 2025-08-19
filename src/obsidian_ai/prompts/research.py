@@ -95,7 +95,7 @@ Structure this as a professional research report with clear sections and specifi
 class ResearchPrompts:
     """Research-related prompt templates."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Load all research prompts
         prompt_manager.load_from_env(
             "research_reasoning", DEFAULT_RESEARCH_REASONING_PROMPT, ["original_topic", "current_focus", "previous_context", "discovered_context"]
@@ -113,14 +113,14 @@ class ResearchPrompts:
             "final_report", DEFAULT_FINAL_REPORT_PROMPT, ["topic", "all_syntheses", "discovered_entities", "unique_wikilinks"]
         )
 
-    def get_research_reasoning_prompt(self, **kwargs) -> str:
+    def get_research_reasoning_prompt(self, **kwargs: str) -> str:
         return prompt_manager.render("research_reasoning", **kwargs)
 
-    def get_content_analysis_prompt(self, **kwargs) -> str:
+    def get_content_analysis_prompt(self, **kwargs: str) -> str:
         return prompt_manager.render("content_analysis", **kwargs)
 
-    def get_step_synthesis_prompt(self, **kwargs) -> str:
+    def get_step_synthesis_prompt(self, **kwargs: str) -> str:
         return prompt_manager.render("step_synthesis", **kwargs)
 
-    def get_final_report_prompt(self, **kwargs) -> str:
+    def get_final_report_prompt(self, **kwargs: str) -> str:
         return prompt_manager.render("final_report", **kwargs)

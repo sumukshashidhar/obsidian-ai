@@ -18,7 +18,7 @@ class OpenAIError(Exception):
 class OpenAIClient:
     """Wrapper for OpenAI client with error handling and retries."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = OpenAI()
 
     def chat_completion(

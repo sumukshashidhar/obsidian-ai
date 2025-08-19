@@ -13,7 +13,7 @@ class PromptTemplate:
     template: str
     variables: list[str]
 
-    def render(self, **kwargs) -> str:
+    def render(self, **kwargs: str) -> str:
         """Render the template with provided variables."""
         missing = [var for var in self.variables if var not in kwargs]
         if missing:
@@ -41,7 +41,7 @@ class PromptManager:
             raise KeyError(f"Template '{name}' not found")
         return self._templates[name]
 
-    def render(self, name: str, **kwargs) -> str:
+    def render(self, name: str, **kwargs: str) -> str:
         """Render a template with variables."""
         return self.get_template(name).render(**kwargs)
 

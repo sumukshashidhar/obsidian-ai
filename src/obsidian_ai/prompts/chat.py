@@ -51,7 +51,7 @@ You are Obsidian-AI, an advanced research assistant specialized in exploring and
 class ChatPrompts:
     """Chat-related prompt templates."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Load system prompt (can be overridden by env var)
         prompt_manager.load_from_env("chat_system", DEFAULT_CHAT_PROMPT, [])
 
