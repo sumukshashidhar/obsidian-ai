@@ -66,11 +66,7 @@ class TestExactPhraseSearch:
         from obsidian_ai.infrastructure.config import Config
 
         test_config = Config(
-            brain_dir=mock_brain,
-            model="gpt-4o",
-            max_tool_calls=5,
-            cache_dir=mock_brain / ".cache",
-            ignore_patterns=[".git", "__pycache__"]
+            brain_dir=mock_brain, model="gpt-4o", max_tool_calls=5, cache_dir=mock_brain / ".cache", ignore_patterns=[".git", "__pycache__"]
         )
 
         with patch("obsidian_ai.core.search_engine.config", test_config):

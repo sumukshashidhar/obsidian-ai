@@ -128,6 +128,7 @@ class TestEmbeddingService:
         result_json = service.semantic_search_json("machine learning", k=3)
 
         import json
+
         result = json.loads(result_json)
 
         assert "query" in result
